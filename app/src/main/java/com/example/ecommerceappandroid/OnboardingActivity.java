@@ -1,6 +1,7 @@
 package com.example.ecommerceappandroid;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
@@ -29,6 +30,20 @@ public class OnboardingActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Checking that the user firstTime come to the app
+        //the firstTime value in the sharedPreference can set to false when the user
+        //go to the onboarding3fragment.
+        SharedPreferences onBoarding = getSharedPreferences("onboardingScreen", MODE_PRIVATE);
+        boolean isFirstTime = onBoarding.getBoolean("firstTime", true);
+
+        if (!isFirstTime){
+            //intent to the next Activity
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         setContentView(R.layout.activity_onboarding);
         Objects.requireNonNull(getSupportActionBar()).hide();
 
@@ -44,7 +59,7 @@ public class OnboardingActivity extends AppCompatActivity implements View.OnClic
         skipButton.setOnClickListener(this);
 
         if (viewPager != null) {
-            ViewPagerAdapter adapter = new ViewPagerAdapter(this);
+            ViewPagerAdapter adapter = new ViewPagerAdapter(this,this);
             viewPager.setAdapter(adapter);
         }
 
